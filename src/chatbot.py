@@ -92,3 +92,29 @@ def chatbot():
 if __name__ == "__main__":
     chatbot()
 """
+
+def get_account() -> int:
+    """
+    Prompts the user for an account number and returns it if valid.
+
+    Returns:
+        int: The entered account number if valid.
+
+    Raises:
+        ValueError: If the account number is not a whole number or does not exist in ACCOUNTS.
+    """
+    try:
+        # Prompt user for account number
+        account_number = int(input("Please enter your account number: "))
+        
+        # Check if the account exists in ACCOUNTS
+        if account_number not in ACCOUNTS:
+            raise ValueError("Account number entered does not exist.")
+        
+        return account_number
+
+    except ValueError as e:
+        if "invalid literal" in str(e):
+            raise ValueError("Account number must be a whole number.")
+        else:
+            raise e
