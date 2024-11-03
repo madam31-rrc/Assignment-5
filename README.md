@@ -2,9 +2,7 @@
 
 ## Description
 
-Module 5
-
-This project is a simple financial chatbot developed for PiXELL River Financial, allowing users
+Module 5, this project is a simple financial chatbot developed for PiXELL River Financial, allowing users
 to check their account balance and make deposits via an interactive console-based application.
 
 ## Author
