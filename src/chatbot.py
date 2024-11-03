@@ -145,3 +145,27 @@ def get_amount() -> float:
             raise ValueError("Invalid amount. Amount must be numeric.")
         else:
             raise e
+
+def get_balance(account: int) -> str:
+    """
+    Retrieves balance for specified account.
+
+    Parameters:
+        account (int): The account number for which balance is to be retrieved.
+
+    Returns:
+        str: The balance message in the format 
+             "current balance for account {account-number} is {balance-formatted-as-currency}."
+
+    Raises:
+        ValueError: If the account number does not exist in the ACCOUNTS dictionary.
+    """
+    # Check if the account exists in the ACCOUNTS dictionary
+    if account not in ACCOUNTS:
+        raise ValueError("Account number does not exist.")
+
+    # Retrieve the balance and format it as currency
+    balance = ACCOUNTS[account]["balance"]
+    balance_message = f"Your current balance for account {account} is ${balance:,.2f}."
+    
+    return balance_message

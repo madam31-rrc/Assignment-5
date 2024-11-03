@@ -8,6 +8,7 @@ from unittest import TestCase
 from unittest.mock import patch
 from src.chatbot import get_account, ACCOUNTS
 from src.chatbot import get_account, get_amount
+from src.chatbot import get_account, get_amount, get_balance
 
 
 class TestChatbot(TestCase):
@@ -80,3 +81,25 @@ class TestChatbot(TestCase):
                 with self.assertRaises(ValueError) as context:
                     get_amount()
                 self.assertEqual(str(context.exception), "Invalid amount. Please enter a positive number.")
+
+    def test_get_balance_valid_account(self):
+        # Arrange
+        account_number = 123456
+        expected_message = "Your current balance for account 123456 is $1,000.00."
+
+        # Act
+        result = get_balance(account_number)
+
+        # Assert
+        self.assertEqual(result, expected_message)
+
+    def test_get_balance_non_existent_account(self):
+        # Arrange
+        non_existent_account = 112233
+
+        # Act
+        with self.assertRaises(ValueError) as context:
+            get_balance(non_existent_account)
+        
+        # Assert
+        self.assertEqual(str(context.exception), "Account number does not exist.")
