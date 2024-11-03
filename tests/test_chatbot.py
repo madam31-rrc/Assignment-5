@@ -9,6 +9,7 @@ from unittest.mock import patch
 from src.chatbot import get_account, ACCOUNTS
 from src.chatbot import get_account, get_amount
 from src.chatbot import get_account, get_amount, get_balance
+from src.chatbot import get_account, get_amount, get_balance, make_deposit
 
 
 class TestChatbot(TestCase):
@@ -103,3 +104,55 @@ class TestChatbot(TestCase):
         
         # Assert
         self.assertEqual(str(context.exception), "Account number does not exist.")
+
+    def test_make_deposit_balance_updated(self):
+        # Arrange
+        account_number = 123456
+        initial_balance = 1000.0
+        deposit_amount = 1500.01
+        ACCOUNTS[account_number] = {"balance": initial_balance}
+        
+        # Act
+        make_deposit(account_number, deposit_amount)
+        
+        # Assert
+        self.assertEqual(ACCOUNTS[account_number]["balance"], initial_balance + deposit_amount)
+
+    def test_make_deposit_confirmation_message(self):
+        # Arrange
+        account_number = 123456
+        initial_balance = 1000.0
+        deposit_amount = 1500.01
+        expected_message = "You have made a deposit of $1,500.01 to account 123456."
+        ACCOUNTS[account_number] = {"balance": initial_balance}
+        
+        # Act
+        result = make_deposit(account_number, deposit_amount)
+        
+        # Assert
+        self.assertEqual(result, expected_message)
+
+    def test_make_deposit_non_existent_account(self):
+        # Arrange
+        non_existent_account = 112233
+        deposit_amount = 1500.01
+        
+        # Act
+        with self.assertRaises(ValueError) as context:
+            make_deposit(non_existent_account, deposit_amount)
+        
+        # Assert
+        self.assertEqual(str(context.exception), "Account number does not exist.")
+
+    def test_make_deposit_invalid_amount(self):
+        # Arrange
+        account_number = 123456
+        ACCOUNTS[account_number] = {"balance": 1000.0}
+        invalid_amount = -50.01
+        
+        # Act
+        with self.assertRaises(ValueError) as context:
+            make_deposit(account_number, invalid_amount)
+        
+        # Assert
+        self.assertEqual(str(context.exception), "Invalid amount. Please enter a positive number.")
