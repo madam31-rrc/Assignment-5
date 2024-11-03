@@ -7,6 +7,8 @@ Usage:
 from unittest import TestCase
 from unittest.mock import patch
 from src.chatbot import get_account, ACCOUNTS
+from src.chatbot import get_account, get_amount
+
 
 class TestChatbot(TestCase):
 
@@ -44,4 +46,37 @@ class TestChatbot(TestCase):
                 get_account()
             self.assertEqual(str(context.exception), "Account number entered does not exist.")
 
+    def test_get_amount_valid(self):
+        # Arrange
+        valid_amount = "500.01"
+        with patch("builtins.input") as mock_input:
+            mock_input.side_effect = [valid_amount]
 
+            # Act
+            result = get_amount()
+
+            # Assert
+            self.assertEqual(result, float(valid_amount))
+
+    def test_get_amount_non_numeric(self):
+        # Arrange
+        non_numeric_input = "non_numeric_data"
+        with patch("builtins.input") as mock_input:
+            mock_input.side_effect = [non_numeric_input]
+
+            # Act and Assert
+            with self.assertRaises(ValueError) as context:
+                get_amount()
+            self.assertEqual(str(context.exception), "Invalid amount. Amount must be numeric.")
+
+    def test_get_amount_zero_or_negative(self):
+        # Arrange
+        invalid_amounts = ["0", "-100"]
+        for invalid_amount in invalid_amounts:
+            with patch("builtins.input") as mock_input:
+                mock_input.side_effect = [invalid_amount]
+
+                # Act and Assert
+                with self.assertRaises(ValueError) as context:
+                    get_amount()
+                self.assertEqual(str(context.exception), "Invalid amount. Please enter a positive number.")

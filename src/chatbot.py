@@ -118,3 +118,30 @@ def get_account() -> int:
             raise ValueError("Account number must be a whole number.")
         else:
             raise e
+
+def get_amount() -> float:
+    """
+    This prompts the user for a transaction amount and returns it if valid.
+
+    Returns:
+        float: The entered amount if valid.
+
+    Raises:
+        ValueError: If the amount is not numeric or is zero/negative.
+    """
+    try:
+        # Prompt user for the transaction amount
+        amount = float(input("Enter the transaction amount: "))
+        
+        # Check if the amount is greater than zero
+        if amount <= 0:
+            raise ValueError("Invalid amount. Please enter a positive number.")
+        
+        return amount
+
+    except ValueError as e:
+        # Check if the error is due to non-numeric input
+        if "could not convert string to float" in str(e):
+            raise ValueError("Invalid amount. Amount must be numeric.")
+        else:
+            raise e
