@@ -10,6 +10,7 @@ from src.chatbot import get_account, ACCOUNTS
 from src.chatbot import get_account, get_amount
 from src.chatbot import get_account, get_amount, get_balance
 from src.chatbot import get_account, get_amount, get_balance, make_deposit
+from src.chatbot import get_account, get_amount, get_balance, make_deposit, user_selection
 
 
 class TestChatbot(TestCase):
@@ -156,3 +157,33 @@ class TestChatbot(TestCase):
         
         # Assert
         self.assertEqual(str(context.exception), "Invalid amount. Please enter a positive number.")
+
+
+    def test_user_selection_valid_lowercase(self):
+        # Arrange
+        with patch('builtins.input', return_value="balance"):
+           
+            # Act
+            result = user_selection()
+        
+        # Assert
+        self.assertEqual(result, "balance")
+
+    def test_user_selection_valid_mixed_case(self):
+        # Arrange
+        with patch('builtins.input', return_value="DEPOSIT"):
+            # Act
+            result = user_selection()
+        
+        # Assert
+        self.assertEqual(result, "deposit")
+
+    def test_user_selection_invalid_selection(self):
+        # Arrange
+        with patch('builtins.input', return_value="invalid_selection"):
+            # Act & Assert
+            with self.assertRaises(ValueError) as context:
+                user_selection()
+            
+            # Assert
+            self.assertEqual(str(context.exception), "Invalid task. Please choose balance, deposit, or exit.")
